@@ -1,17 +1,40 @@
 package com.example.demo.service
 
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+
+interface PingService {
+    fun ping(): String
+}
 
 @Service
-class PingService {
-    fun pingResponse(): String{
-        val currentTime = LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val time = currentTime.format(formatter)
-        val response = "pong $time"
-        return response
+@Profile("default")
+class DefaultPingService: PingService {
+    override fun ping(): String {
+        return "pong "
+    }
+}
+
+@Service
+@Profile("dev")
+class DevPingService: PingService {
+    override fun ping(): String {
+        return "Hello, Current Time is "
+    }
+}
+
+@Service
+@Profile("prod")
+class ProdPingService: PingService {
+    override fun ping(): String {
+        return "Hallo, die aktuelle Zeit ist "
+    }
+}
+
+@Service
+@Profile("qa")
+class QaPingService: PingService {
+    override fun ping(): String {
+        return "Bonjour, l'heure actuelle est "
     }
 }
